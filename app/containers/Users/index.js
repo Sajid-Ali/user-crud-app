@@ -9,7 +9,6 @@ import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { initialize } from 'redux-form/immutable';
-import { createStructuredSelector } from 'reselect';
 import { Button, Col, Modal, Row, Table } from 'antd';
 
 import injectSaga from 'utils/injectSaga';
@@ -19,7 +18,7 @@ import saga from './saga';
 import reducer from './reducer';
 import UserForm from './UserForm';
 import * as actions from './actions';
-import makeSelectUsers from './selectors';
+import { makeSelectUserList } from './selectors';
 import { columns } from './TableCompnents/columns';
 
 /* eslint-disable react/prefer-stateless-function */
@@ -29,7 +28,7 @@ export class Users extends React.Component {
   };
 
   onSubmit = values => {
-    this.props.create(values.toJS());
+    this.props.create(values);
   };
 
   toggleModal = () => {
@@ -38,8 +37,13 @@ export class Users extends React.Component {
   };
 
   render() {
+    const { list } = this.props;
+    console.log(list);
     return (
       <div style={{ marginLeft: '5%', marginRight: '5%' }}>
+        <br />
+        <br />
+        <br />
         <Row gutter={16}>
           <Col span={22}>
             <h1>Home</h1>
@@ -66,19 +70,21 @@ export class Users extends React.Component {
             pagination={false}
             scroll={{ y: 500 }}
             columns={columns(this)}
-            dataSource={[]}
+            dataSource={(list.size && list.toJS()) || []}
           />
         </Row>
-        <Modal
-          title="Create User Modal"
-          centered
-          visible={this.state.visible}
-          onOk={this.toggleModal}
-          onCancel={this.toggleModal}
-          footer={[null]}
-        >
-          <UserForm onSubmit={this.onSubmit} />
-        </Modal>
+        {this.state.visible && (
+          <Modal
+            title="Create User Modal"
+            centered
+            visible={this.state.visible}
+            onOk={this.toggleModal}
+            onCancel={this.toggleModal}
+            footer={[null]}
+          >
+            <UserForm onSubmit={this.onSubmit} />
+          </Modal>
+        )}
       </div>
     );
   }
@@ -87,15 +93,17 @@ export class Users extends React.Component {
 Users.propTypes = {
   initForm: PropTypes.func.isRequired,
   create: PropTypes.func.isRequired,
+  list: PropTypes.any,
 };
 
-const mapStateToProps = createStructuredSelector({
-  users: makeSelectUsers(),
+const mapStateToProps = state => ({
+  list: makeSelectUserList()(state),
 });
 
 function mapDispatchToProps(dispatch) {
   return {
     initForm: (formName, values) => dispatch(initialize(formName, values)),
+    deleteItem: id => dispatch(actions.deleteItem(id)),
     create: values => dispatch(actions.createUser(values)),
   };
 }

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { Button, Icon, Modal, Tooltip } from 'antd';
+import { Button, Divider, Icon, Modal, Tooltip } from 'antd';
 
 const { confirm } = Modal;
 
@@ -35,21 +35,21 @@ export const columns = parent => [
     width: '20%',
   },
   {
-    title: <span style={{ marginLeft: 20 }}>Action</span>,
+    title: <span style={{ marginLeft: '20' }}>Action</span>,
     key: 'action',
     width: '10%',
     render: (text, record) => (
-      <span style={{ marginLeft: 45, align: 'center' }}>
+      <span>
         <Tooltip title="Delete">
           <Button
             onClick={() =>
               confirm({
-                title: 'Do you Want to delete this template?',
+                title: 'Do you Want to delete this user?',
                 okType: 'danger',
                 okText: 'Delete',
                 cancelText: 'No',
                 onOk() {
-                  parent.props.deleteItem(parseInt(record.id, 10));
+                  parent.props.deleteItem(parseInt(record.key, 10));
                 },
               })
             }
@@ -64,6 +64,25 @@ export const columns = parent => [
             <Icon
               type="delete"
               style={{ fontSize: '12px', lineHeight: 0 }}
+              theme="outlined"
+            />
+          </Button>
+        </Tooltip>
+        <Divider type="vertical" style={{ top: 0 }} />
+        <Tooltip title="View">
+          <Button
+            disabled={record.deleteLoading}
+            // onClick={() => parent.onCellClick(record)}
+            shape="circle"
+            size="small"
+            style={{
+              backgroundColor: 'black',
+              lineHeight: 0.4,
+            }}
+          >
+            <Icon
+              type="eye"
+              style={{ color: '#fff', fontSize: '10px', lineHeight: 0 }}
               theme="outlined"
             />
           </Button>

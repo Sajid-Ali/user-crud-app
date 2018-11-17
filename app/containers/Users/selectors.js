@@ -7,16 +7,9 @@ import { initialState } from './reducer';
 
 const selectUsersDomain = state => state.get('users', initialState);
 
-/**
- * Other specific selectors
- */
+const makeSelectUserList = () =>
+  createSelector(selectUsersDomain, substate =>
+    substate.getIn(['user', 'data']),
+  );
 
-/**
- * Default selector used by Users
- */
-
-const makeSelectUsers = () =>
-  createSelector(selectUsersDomain, substate => substate.toJS());
-
-export default makeSelectUsers;
-export { selectUsersDomain };
+export { selectUsersDomain, makeSelectUserList };
