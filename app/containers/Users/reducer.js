@@ -31,7 +31,7 @@ function usersReducer(state = initialState, action) {
       const index = state
         .getIn(['user', 'data'])
         .findIndex(row => row.key === action.id);
-      return state.updateIn(['user', 'data', index], () => action.values);
+      return state.updateIn(['user', 'data', index], () => action.user);
     }
 
     case DELETE_USER: {

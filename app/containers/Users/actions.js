@@ -4,7 +4,12 @@
  *
  */
 
-import { CREATE_USER, DEFAULT_ACTION, DELETE_USER } from './constants';
+import {
+  CREATE_USER,
+  DEFAULT_ACTION,
+  DELETE_USER,
+  UPDATE_USER,
+} from './constants';
 
 export function defaultAction() {
   return {
@@ -16,6 +21,14 @@ export function createUser(user) {
   return {
     type: CREATE_USER,
     user,
+  };
+}
+
+export function updateUser(id, user) {
+  return {
+    type: UPDATE_USER,
+    user,
+    id,
   };
 }
 

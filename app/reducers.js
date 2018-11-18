@@ -4,11 +4,10 @@
 
 import { combineReducers } from 'redux-immutable';
 import { connectRouter } from 'connected-react-router/immutable';
+import { reducer as form } from 'redux-form/immutable';
 
 import history from 'utils/history';
 import languageProviderReducer from 'containers/LanguageProvider/reducer';
-
-import { reducer as formReducer } from 'redux-form';
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
@@ -16,7 +15,7 @@ import { reducer as formReducer } from 'redux-form';
 export default function createReducer(injectedReducers = {}) {
   const rootReducer = combineReducers({
     language: languageProviderReducer,
-    from: formReducer,
+    form,
     ...injectedReducers,
   });
 

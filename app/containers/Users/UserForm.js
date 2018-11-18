@@ -1,102 +1,81 @@
 /* eslint-disable indent,react/prefer-stateless-function */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Row, Col, Button, Input, Icon } from 'antd';
-// import { isValidEmail } from '../../utils/utils';
-
-const FormItem = Form.Item;
+import { Field, reduxForm } from 'redux-form/immutable';
+import { Form, Row, Col, Button } from 'antd';
+import { AInput } from '../../InputTypes';
+import { isValidEmail } from '../../utils/regexValidations';
 
 export class UserForm extends React.Component {
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (!err) {
-        this.props.onSubmit(values);
-      }
-    });
-  };
-
   render() {
-    const { getFieldDecorator } = this.props.form;
+    const { submitting, handleSubmit, onSubmit, userId } = this.props;
     return (
-      <Form onSubmit={this.handleSubmit} className="">
-        <Row gutter={24}>
+      <Form onSubmit={handleSubmit(onSubmit)} layout="vertical">
+        <Row gutter={16}>
           <Col span={12}>
-            <FormItem>
-              {getFieldDecorator('name', {
-                rules: [
-                  { required: true, message: 'Please input your username!' },
-                ],
-              })(
-                <Input
-                  prefix={
-                    <Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  placeholder="User Name"
-                />,
-              )}
-            </FormItem>
+            <Field hasFeedback name="name" label="Name" component={AInput} />
           </Col>
-
           <Col span={12}>
-            <FormItem>
-              {getFieldDecorator('email', {
-                rules: [
-                  { required: true, message: 'Please input your email!' },
-                ],
-              })(
-                <Input
-                  prefix={
-                    <Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />
-                  }
-                  type="email"
-                  placeholder="User Email"
-                />,
-              )}
-            </FormItem>
+            <Field hasFeedback name="email" label="Email" component={AInput} />
           </Col>
         </Row>
-        <Row gutter={24}>
+        <Row gutter={16} style={{ marginTop: 10 }}>
           <Col span={12}>
-            <FormItem>
-              {getFieldDecorator('role', {
-                rules: [
-                  { required: true, message: 'Please input your user role!' },
-                ],
-              })(<Input type="text" placeholder="User Name" />)}
-            </FormItem>
+            <Field hasFeedback name="role" label="Role" component={AInput} />
           </Col>
-
           <Col span={12}>
-            <FormItem>
-              {getFieldDecorator('observation', {
-                rules: [
-                  { required: true, message: 'Please input your Observation!' },
-                ],
-              })(<Input type="text" placeholder="User Observation" />)}
-            </FormItem>
+            <Field
+              hasFeedback
+              component={AInput}
+              name="observation"
+              label="Observation"
+            />
           </Col>
         </Row>
-        <FormItem>
+        <Row gutter={16} style={{ marginTop: 20 }}>
           <Button
-            style={{ float: 'right' }}
             type="primary"
+            size="default"
+            loading={submitting}
+            disabled={submitting}
             htmlType="submit"
-            className="login-form-button"
+            style={{ float: 'right', marginRight: 10 }}
           >
-            Create
+            {(userId === null && 'Create') || 'Save Changes'}
           </Button>
-        </FormItem>
+        </Row>
       </Form>
     );
   }
 }
 
 UserForm.propTypes = {
-  form: PropTypes.any.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  submitting: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  userId: PropTypes.any,
 };
 
-const UserModalForm = Form.create()(UserForm);
+const validate = values => {
+  const errors = {};
 
-export default UserModalForm;
+  const name = values.get('name');
+  if (!name) errors.name = 'Required';
+
+  const email = values.get('email');
+  if (!email) errors.email = 'Required';
+  if (!isValidEmail(email)) errors.email = 'Email is not valid';
+
+  const role = values.get('role');
+  if (!role) errors.role = 'Required';
+
+  const observation = values.get('observation');
+  if (!observation) errors.observation = 'Required';
+
+  return errors;
+};
+
+export default reduxForm({
+  form: 'UserForm',
+  validate,
+})(UserForm);

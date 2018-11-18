@@ -49,7 +49,7 @@ export const columns = parent => [
                 okText: 'Delete',
                 cancelText: 'No',
                 onOk() {
-                  parent.props.deleteItem(parseInt(record.key, 10));
+                  parent.props.deleteItem(record.key);
                 },
               })
             }
@@ -71,8 +71,10 @@ export const columns = parent => [
         <Divider type="vertical" style={{ top: 0 }} />
         <Tooltip title="View">
           <Button
-            disabled={record.deleteLoading}
-            // onClick={() => parent.onCellClick(record)}
+            onClick={() => {
+              parent.onCellClick(record);
+              parent.toggleModal();
+            }}
             shape="circle"
             size="small"
             style={{
