@@ -6,9 +6,10 @@
 
 import {
   CREATE_USER,
-  DEFAULT_ACTION,
   DELETE_USER,
   UPDATE_USER,
+  TOGGLE_MODAL,
+  DEFAULT_ACTION,
 } from './constants';
 
 export function defaultAction() {
@@ -36,5 +37,11 @@ export function deleteItem(id) {
   return {
     type: DELETE_USER,
     id,
+  };
+}
+
+export function toggleModal() {
+  return {
+    type: TOGGLE_MODAL,
   };
 }

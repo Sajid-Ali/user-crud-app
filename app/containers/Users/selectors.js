@@ -12,4 +12,9 @@ const makeSelectUserList = () =>
     substate.getIn(['user', 'data']),
   );
 
-export { selectUsersDomain, makeSelectUserList };
+const makeSelectModalVisible = () =>
+  createSelector(selectUsersDomain, substate =>
+    substate.getIn(['modal', 'visible']),
+  );
+
+export { selectUsersDomain, makeSelectUserList, makeSelectModalVisible };
