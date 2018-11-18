@@ -73,7 +73,7 @@ export const columns = parent => [
           <Button
             onClick={() => {
               parent.onCellClick(record);
-              parent.toggleModal();
+              parent.props.toggleModal();
             }}
             shape="circle"
             size="small"
