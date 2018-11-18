@@ -64,7 +64,7 @@ const validate = values => {
 
   const email = values.get('email');
   if (!email) errors.email = 'Required';
-  if (!isValidEmail(email)) errors.email = 'Email is not valid';
+  else if (!isValidEmail(email)) errors.email = 'Email is not valid';
 
   const role = values.get('role');
   if (!role) errors.role = 'Required';
